@@ -2,20 +2,11 @@
 
 #include <stdexcept>
 
+#include "test_utils.h"
 #include "msk/core/matrix.h"
 
 using msk::Matrix;
-
-namespace {
-    void ExpectMatrixNear(const Matrix &actual, const Matrix &expected, double tol = 1e-12) {
-        ASSERT_EQ(actual.rows(), expected.rows());
-        ASSERT_EQ(actual.cols(), expected.cols());
-        for (int i = 0; i < actual.rows(); i++)
-            for (int j = 0; j < actual.cols(); j++)
-                EXPECT_NEAR(actual(i, j), expected(i, j), tol) << "en (" << i << ", " << j << ")";
-    }
-}
-
+using testing::ExpectMatrixNear;
 
 TEST(Matrix, BuildWithZeros) {
     Matrix m(2, 3);
@@ -30,7 +21,7 @@ TEST(Matrix, WriteAndRead) {
     Matrix m(2, 3);
     m(1, 2) = 7.5;
     EXPECT_DOUBLE_EQ(m(1, 2), 7.5);
-    EXPECT_DOUBLE_EQ(m(0, 0), 0.0);  // el resto no se tocó
+    EXPECT_DOUBLE_EQ(m(0, 0), 0.0); // el resto no se tocó
 }
 
 TEST(Matrix, RowMajorLayout) {
@@ -97,14 +88,20 @@ TEST(Matrix, MultiplySquareByVector) {
 }
 
 TEST(Matrix, MultiplyRectangular) {
-    const Matrix a(2, 3, {7, 5, 9,
-                          8, 2, 5});
-    const Matrix b(3, 4, {1, 0, 2, 3,
-                          4, 5, 7, 1,
-                          5, 1, 3, 3});
+    const Matrix a(2, 3, {
+                       7, 5, 9,
+                       8, 2, 5
+                   });
+    const Matrix b(3, 4, {
+                       1, 0, 2, 3,
+                       4, 5, 7, 1,
+                       5, 1, 3, 3
+                   });
 
-    const Matrix expected(2, 4, {72, 34, 76, 53,
-                                 41, 15, 45, 41});
+    const Matrix expected(2, 4, {
+                              72, 34, 76, 53,
+                              41, 15, 45, 41
+                          });
     ExpectMatrixNear(a * b, expected);
 }
 
@@ -138,6 +135,25 @@ TEST(Matrix, IncompatibleDimensionsThrow) {
 
     EXPECT_THROW(m2x2 + m3x4, std::invalid_argument);
     EXPECT_THROW(m2x2 - m3x4, std::invalid_argument);
-    EXPECT_THROW(m3x4 * m2x2, std::invalid_argument);  // 4 columnas contra 2 filas
-    EXPECT_THROW(m2x2 * m3x4, std::invalid_argument);  // 2 columnas contra 3 filas
+    EXPECT_THROW(m3x4 * m2x2, std::invalid_argument);
+    EXPECT_THROW(m2x2 * m3x4, std::invalid_argument);
+}
+
+TEST(Matrix, GetRowAndColumnVectors) {
+    const Matrix m(2, 3, {1.0, 2.0, 3.0,
+                          4.0, 5.0, 6.0});
+
+    std::vector<double> expected_row0 = {1.0, 2.0, 3.0};
+    std::vector<double> expected_row1 = {4.0, 5.0, 6.0};
+
+    EXPECT_EQ(m.row(0), expected_row0);
+    EXPECT_EQ(m.row(1), expected_row1);
+
+    std::vector<double> expected_col0 = {1.0, 4.0};
+    std::vector<double> expected_col1 = {2.0, 5.0};
+    std::vector<double> expected_col2 = {3.0, 6.0};
+
+    EXPECT_EQ(m.column(0), expected_col0);
+    EXPECT_EQ(m.column(1), expected_col1);
+    EXPECT_EQ(m.column(2), expected_col2);
 }

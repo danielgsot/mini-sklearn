@@ -21,9 +21,14 @@ namespace msk {
         Matrix operator+(const Matrix& m) const;
         Matrix operator-(const Matrix& m) const;
         Matrix operator*(const Matrix& m) const;
-        Matrix operator*(const double k) const;
+        Matrix operator*(double k) const;
+
+        std::vector<double> row(int i) const;
+        std::vector<double> column(int j) const;
 
         Matrix transpose() const;
+
+
     };
 }
 #endif //MINI_SKLEARN_MATRIX_H

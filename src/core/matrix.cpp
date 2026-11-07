@@ -45,13 +45,7 @@ namespace msk {
         return _data[i * _cols + j];
     }
 
-    Matrix Matrix::transpose() const {
-        Matrix result(_cols, _rows);
-        for (int i = 0; i < _rows; i++)
-            for (int j = 0; j < _cols; j++)
-                result(j, i) = (*this)(i, j);
-        return result;
-    }
+
 
     Matrix Matrix::operator+(const Matrix &m) const {
         require_same_shape(*this, m);
@@ -90,6 +84,30 @@ namespace msk {
         for (int i = 0; i < _rows; i++)
             for (int j = 0; j < _cols; j++)
                 result(i, j) = (*this)(i, j) * k;
+        return result;
+    }
+
+    std::vector<double> Matrix::row(int i) const {
+        assert(i >= 0 && i < _rows);
+        std::vector<double> result(_cols);
+        for (int j = 0; j < _cols; j++)
+            result[j] = (*this)(i, j);
+        return result;
+    }
+
+    std::vector<double> Matrix::column(int j) const {
+        assert(j >= 0 && j < _cols);
+        std::vector<double> result(_rows);
+        for (int i = 0; i < _rows; i++)
+            result[i] = (*this)(i, j);
+        return result;
+    }
+
+    Matrix Matrix::transpose() const {
+        Matrix result(_cols, _rows);
+        for (int i = 0; i < _rows; i++)
+            for (int j = 0; j < _cols; j++)
+                result(j, i) = (*this)(i, j);
         return result;
     }
 }
