@@ -4,8 +4,8 @@
 namespace msk {
     class Matrix {
     private:
-        int _rows;
-        int _cols;
+        size_t _rows;
+        size_t _cols;
         std::vector<double> _data;
 
     public:

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+cmake_policy(SET CMP0135 NEW)
 project(mini_sklearn LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -11,6 +12,8 @@ add_library(msk STATIC
         src/core/matrix.cpp
         include/msk/metrics/regression.h
         src/metrics/regression.cpp
+        include/msk/preprocessing/standard_scaler.h
+        src/preprocessing/standard_scaler.cpp
 )
 target_include_directories(msk PUBLIC include)
 if(NOT MSVC)
@@ -36,6 +39,8 @@ if(MSK_BUILD_TESTS)
             tests/test_matrix.cpp
             tests/test_matrix.cpp
             tests/test_metrics.cpp
+            tests/test_utils.h
+            tests/test_standard_scaler.cpp
     )
     target_link_libraries(msk_tests PRIVATE msk GTest::gtest_main)
     include(GoogleTest)
