@@ -14,6 +14,9 @@ add_library(msk STATIC
         src/metrics/regression.cpp
         include/msk/preprocessing/standard_scaler.h
         src/preprocessing/standard_scaler.cpp
+        include/msk/preprocessing/min_max_scaler.h
+        src/preprocessing/min_max_scaler.cpp
+        include/msk/core/base.h
 )
 target_include_directories(msk PUBLIC include)
 if(NOT MSVC)
@@ -41,6 +44,8 @@ if(MSK_BUILD_TESTS)
             tests/test_metrics.cpp
             tests/test_utils.h
             tests/test_standard_scaler.cpp
+            tests/test_min_max_scaler.cpp
+            tests/test_transformer.cpp
     )
     target_link_libraries(msk_tests PRIVATE msk GTest::gtest_main)
     include(GoogleTest)

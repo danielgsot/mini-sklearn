@@ -68,11 +68,6 @@ namespace msk {
         return result;
     }
 
-    Matrix StandardScaler::fit_transform(const msk::Matrix &X) {
-        fit(X);
-        return transform(X);
-    }
-
     const std::vector<double>& StandardScaler::means() const {
         return _means;
     }

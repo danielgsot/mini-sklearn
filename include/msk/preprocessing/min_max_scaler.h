@@ -1,14 +1,14 @@
 #pragma once
 
+#include "msk/core/base.h"
 #include "msk/core/matrix.h"
 #include <vector>
 
 namespace msk {
-    class MinMaxScaler {
+    class MinMaxScaler : public Transformer {
     public:
-        void fit(const Matrix& X);
-        Matrix transform(const Matrix& X) const;
-        Matrix fit_transform(const Matrix& X);
+        void fit(const Matrix& X) override;
+        Matrix transform(const Matrix& X) const override;
 
         const std::vector<double>& min() const;
         /**

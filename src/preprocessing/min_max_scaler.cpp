@@ -20,7 +20,7 @@ namespace msk {
 
             _min[j] = *min_it;
             double r = *max_it - *min_it;
-            
+
             // Replace range with 1.0 if the column is constant
             // (prevents division by 0 and preserves scale for new data)
             _range[j] = (r == 0.0) ? 1.0 : r;
@@ -43,11 +43,6 @@ namespace msk {
             }
         }
         return result;
-    }
-
-    Matrix MinMaxScaler::fit_transform(const msk::Matrix &X) {
-        fit(X);
-        return transform(X);
     }
 
     const std::vector<double>& MinMaxScaler::min() const {
