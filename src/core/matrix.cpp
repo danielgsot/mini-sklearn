@@ -86,6 +86,18 @@ namespace msk {
                 result(i, j) = (*this)(i, j) * k;
         return result;
     }
+    std::vector<double> Matrix::operator*(const std::vector<double>& v) const {
+        if (static_cast<int>(v.size()) != _cols) {
+            throw std::invalid_argument("Vector size does not match with the matrix columns number.");
+        }
+        std::vector<double> result(_rows);
+        for (int i = 0; i < _rows; i++) {
+            for (int j = 0; j < _cols; j++) {
+                result[i] += (*this)(i, j) * v[j];
+            }
+        }
+        return result;
+    }
 
     std::vector<double> Matrix::row(int i) const {
         assert(i >= 0 && i < _rows);

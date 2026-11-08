@@ -4,8 +4,8 @@
 namespace msk {
     class Matrix {
     private:
-        size_t _rows;
-        size_t _cols;
+        int _rows;
+        int _cols;
         std::vector<double> _data;
 
     public:
@@ -22,6 +22,7 @@ namespace msk {
         Matrix operator-(const Matrix& m) const;
         Matrix operator*(const Matrix& m) const;
         Matrix operator*(double k) const;
+        std::vector<double> operator*(const std::vector<double>& v) const;
 
         std::vector<double> row(int i) const;
         std::vector<double> column(int j) const;

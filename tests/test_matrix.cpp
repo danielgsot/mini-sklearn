@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-
 #include <stdexcept>
+#include <vector>
 
 #include "test_utils.h"
 #include "msk/core/matrix.h"
@@ -21,7 +21,7 @@ TEST(Matrix, WriteAndRead) {
     Matrix m(2, 3);
     m(1, 2) = 7.5;
     EXPECT_DOUBLE_EQ(m(1, 2), 7.5);
-    EXPECT_DOUBLE_EQ(m(0, 0), 0.0); // el resto no se tocó
+    EXPECT_DOUBLE_EQ(m(0, 0), 0.0);
 }
 
 TEST(Matrix, RowMajorLayout) {
@@ -40,7 +40,6 @@ TEST(Matrix, NegativeDimensionsThrow) {
     EXPECT_THROW(Matrix(-1, -2, {1, 2}), std::invalid_argument);
 }
 
-
 TEST(Matrix, TransposeNonSquare) {
     const Matrix m(3, 2, {1, 2, 3, 4, 5, 6});
     const Matrix t = m.transpose();
@@ -56,7 +55,6 @@ TEST(Matrix, TransposeTwiceGivesOriginal) {
     const Matrix m(2, 3, {1, 2, 3, 4, 5, 6});
     ExpectMatrixNear(m.transpose().transpose(), m);
 }
-
 
 TEST(Matrix, AdditionAndSubtraction) {
     const Matrix m1(2, 2, {7, 5, 9, 8});
@@ -78,12 +76,10 @@ TEST(Matrix, OperationsDoNotModifyOperands) {
     ExpectMatrixNear(b, m2);
 }
 
-
 TEST(Matrix, MultiplySquareByVector) {
     const Matrix m1(2, 2, {7, 5, 4, 2});
     const Matrix m2(2, 1, {1, 3});
 
-    // 7*1 + 5*3 = 22 ; 4*1 + 2*3 = 10
     ExpectMatrixNear(m1 * m2, Matrix(2, 1, {22, 10}));
 }
 
@@ -121,13 +117,11 @@ TEST(Matrix, MultiplicationIsNotCommutative) {
     ExpectMatrixNear(b * a, Matrix(2, 2, {3, 4, 1, 2}));
 }
 
-
 TEST(Matrix, ScalarMultiplication) {
     const Matrix m(2, 2, {2.0, -3.5, 4.0, 0.0});
 
     ExpectMatrixNear(m * 2.0, Matrix(2, 2, {4.0, -7.0, 8.0, 0.0}));
 }
-
 
 TEST(Matrix, IncompatibleDimensionsThrow) {
     const Matrix m2x2(2, 2, {1, 2, 3, 4});
@@ -156,4 +150,35 @@ TEST(Matrix, GetRowAndColumnVectors) {
     EXPECT_EQ(m.column(0), expected_col0);
     EXPECT_EQ(m.column(1), expected_col1);
     EXPECT_EQ(m.column(2), expected_col2);
+}
+
+TEST(Matrix, MultiplyMatrixByStdVector2x3) {
+    Matrix m(2, 3, {1, 2, 3, 4, 5, 6});
+    std::vector<double> v = {1.0, 2.0, 3.0};
+    std::vector<double> expected = {14.0, 32.0};
+
+    EXPECT_EQ(m * v, expected);
+}
+
+TEST(Matrix, MultiplyMatrixByStdVector4x2) {
+    Matrix m(4, 2, {1, 2, 3, 4, 5, 6, 7, 8});
+    std::vector<double> v = {1.0, 2.0};
+    std::vector<double> expected = {5.0, 11.0, 17.0, 23.0};
+
+    EXPECT_EQ(m * v, expected);
+}
+
+TEST(Matrix, MultiplyMatrixByStdVectorInvalidSizeThrows) {
+    Matrix m(2, 3);
+    std::vector<double> v = {1.0, 2.0};
+
+    EXPECT_THROW(m * v, std::invalid_argument);
+}
+
+TEST(Matrix, MultiplyMatrixByStdVectorBasisExtractsFirstColumn) {
+    Matrix m(2, 3, {1, 2, 3, 4, 5, 6});
+    std::vector<double> v = {1.0, 0.0, 0.0};
+    std::vector<double> expected = {1.0, 4.0};
+
+    EXPECT_EQ(m * v, expected);
 }
